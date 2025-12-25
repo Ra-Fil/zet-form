@@ -108,10 +108,14 @@ app.post('/api/login', (req, res) => {
     const { username, password } = req.body;
     const adminUser = process.env.ADMIN_USERNAME || 'Z';
     const adminPass = process.env.ADMIN_PASSWORD || '1';
+    
+    console.log(`Login attempt for user: ${username}`);
 
     if (username === adminUser && password === adminPass) {
+        console.log("Login successful");
         res.json({ success: true });
     } else {
+        console.log("Login failed: invalid credentials");
         res.status(401).json({ error: 'Nesprávné přihlašovací jméno nebo heslo.' });
     }
 });
