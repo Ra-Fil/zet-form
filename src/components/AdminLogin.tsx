@@ -11,21 +11,24 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Support both Node process.env (legacy/test) and Vite import.meta.env
-    // Added type assertion to bypass TypeScript check on import.meta.env
-    const envUser = (import.meta as any).env?.VITE_ADMIN_USERNAME || process.env.ADMIN_USERNAME;
-    const envPass = (import.meta as any).env?.VITE_ADMIN_PASSWORD || process.env.ADMIN_PASSWORD;
+    try {
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
 
-    const adminUser = envUser || 'Z';
-    const adminPass = envPass || '1';
-
-    if (username === adminUser && password === adminPass) {
-      onLoginSuccess();
-    } else {
-      setError('Nesprávné přihlašovací jméno nebo heslo.');
+      if (response.ok) {
+        onLoginSuccess();
+      } else {
+        const data = await response.json();
+        setError(data.error || 'Nesprávné přihlašovací jméno nebo heslo.');
+      }
+    } catch (err) {
+      setError('Chyba při komunikaci se serverem.');
     }
   };
 

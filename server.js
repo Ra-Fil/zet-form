@@ -104,6 +104,18 @@ const generateId = async () => {
 
 // API Routes
 
+app.post('/api/login', (req, res) => {
+    const { username, password } = req.body;
+    const adminUser = process.env.ADMIN_USERNAME || 'Z';
+    const adminPass = process.env.ADMIN_PASSWORD || '1';
+
+    if (username === adminUser && password === adminPass) {
+        res.json({ success: true });
+    } else {
+        res.status(401).json({ error: 'Nesprávné přihlašovací jméno nebo heslo.' });
+    }
+});
+
 app.get('/api/submissions', async (req, res) => {
     try {
         const result = await pool.query(`
