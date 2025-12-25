@@ -4,23 +4,23 @@ import React, { useState } from 'react';
 const Header: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isAuthenticated = sessionStorage.getItem('isAdminAuthenticated') === 'true';
-  const currentHash = window.location.hash;
+  const currentPath = window.location.pathname;
 
-  const handleNavigation = (hash: string) => {
-    window.location.hash = hash;
-    setIsMenuOpen(false); // Zavřít menu po navigaci
+  const handleNavigation = (path: string) => {
+    window.history.pushState({}, '', path);
+    window.dispatchEvent(new Event('locationchange'));
+    setIsMenuOpen(false);
   };
   
   const handleLogout = () => {
     sessionStorage.removeItem('isAdminAuthenticated');
-    window.location.hash = '';
-    setIsMenuOpen(false); // Zavřít menu po odhlášení
+    handleNavigation('/');
   };
 
   const navLinks = [
-    { label: 'Formulář', hash: '' },
-    { label: 'Ceník', hash: '#/cenik' },
-    { label: isAuthenticated ? 'Administrace' : 'Admin', hash: '#/admin' },
+    { label: 'Formulář', path: '/' },
+    { label: 'Ceník', path: '/cenik' },
+    { label: isAuthenticated ? 'Administrace' : 'Admin', path: '/admin' },
   ];
 
   const HamburgerIcon = () => (
@@ -35,15 +35,13 @@ const Header: React.FC = () => {
     </svg>
   );
 
-  const renderNavLink = (link: { label: string; hash: string; }, isMobile: boolean = false) => {
-    const isActive = link.hash === '' 
-      ? (currentHash === '' || currentHash === '#') 
-      : currentHash === link.hash;
+  const renderNavLink = (link: { label: string; path: string; }, isMobile: boolean = false) => {
+    const isActive = currentPath === link.path;
       
     return (
       <button
         key={link.label}
-        onClick={() => handleNavigation(link.hash)}
+        onClick={() => handleNavigation(link.path)}
         className={`relative group pb-1 hover:text-white transition-colors duration-300 ${isMobile ? 'w-full text-left py-2' : ''}`}
         aria-label={`Přejít na ${link.label.toLowerCase()}`}
         aria-current={isActive ? 'page' : undefined}
@@ -59,7 +57,7 @@ const Header: React.FC = () => {
       <div className="container mx-auto flex justify-between items-center p-4">
         <div 
           className="flex items-center cursor-pointer"
-          onClick={() => handleNavigation('')}
+          onClick={() => handleNavigation('/')}
         >
           <div className="w-16 h-10 bg-brand-red mr-4 flex items-center justify-center text-white font-bold text-sm">
             LOGO
