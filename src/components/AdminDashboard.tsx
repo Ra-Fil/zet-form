@@ -1,5 +1,6 @@
 
 import React, { useState, useRef, useEffect } from 'react';
+import JSZip from 'jszip';
 import { Submission, EventStatus, ServerFile, FileWithData } from '../types';
 import ViewIcon from './icons/ViewIcon';
 import ZipIcon from './icons/ZipIcon';
@@ -7,9 +8,7 @@ import DocumentIcon from './icons/DocumentIcon';
 import TrashIcon from './icons/TrashIcon';
 import { getSubmissionWithFiles } from '../db';
 
-// Make sure JSZip is loaded from the script tag in index.html
-declare const JSZip: any;
-
+// AdminDashboard components
 interface AdminDashboardProps {
   submissions: Submission[];
   onStatusChange: (submissionId: string, newStatus: EventStatus) => void;
