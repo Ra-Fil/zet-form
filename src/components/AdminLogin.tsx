@@ -22,6 +22,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLoginSuccess }) => {
       });
 
       if (response.ok) {
+        sessionStorage.setItem('isAdminAuthenticated', 'true');
         onLoginSuccess();
       } else {
         const data = await response.json();
