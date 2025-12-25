@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import CustomerFormPage from './CustomerFormPage';
-import AdminPage from './AdminPage';
-import PriceListPage from './PriceListPage';
+import CustomerFormPage from './src/pages/CustomerFormPage';
+import AdminPage from './src/pages/AdminPage';
+import PriceListPage from './src/pages/PriceListPage';
 
 const App: React.FC = () => {
   const [path, setPath] = useState(window.location.pathname);
